@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ export class LoginComponent {
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
 
     this.form = this.fb.group({
       email: '',
@@ -31,9 +32,9 @@ export class LoginComponent {
     };
 
     this.http.post('http://localhost:8000/oauth/token', data).subscribe(
-      result => {
-        console.log("Success");
-        console.log(result);
+      (result: any) => {
+        localStorage.setItem('token', result.access_token);
+        this.router.navigate(['/secure']);
       },
       error => {
         console.log("Failed");
